@@ -41,11 +41,44 @@ router.post('/', (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
-  // update a category by its `id` value
+  Category.update(
+    {
+      category_name: req.body.category_name,
+    },
+    {
+      where: {
+        id: req.params.id,
+      },
+    }
+  )
+    .then((cData) => {
+      if (!cData) {
+        res.status(404).json({ message: 'Category id not found' });
+        return;
+      }
+      res.json(cData);
+    })
+    .catch((err) => {
+      res.status(500).json(err);
+    });
 });
 
 router.delete('/:id', (req, res) => {
-  // delete a category by its `id` value
+  Category.destroy({
+    where: {
+      id: req.params.id,
+    },
+  })
+    .then((cData) => {
+      if (!cData) {
+        res.json(404).json({ message: 'Category id not found' });
+        return;
+      }
+      res.json(cData);
+    })
+    .catch((err) => {
+      res.status(500).json(err);
+    });
 });
 
 module.exports = router;
